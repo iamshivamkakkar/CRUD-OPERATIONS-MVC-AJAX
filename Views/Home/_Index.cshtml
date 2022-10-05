@@ -1,0 +1,214 @@
+﻿
+@model IEnumerable<Shivam.Models.Domain.Emp>
+@{
+    Layout = null;
+}
+<div class="fixTableHead">
+    <div style="height:330px;margin-top:1px;margin-left:-10px;overflow-y:scroll">
+        <table style="height:1px;width:1070px; margin-left:120px; border:hidden;" class="table table-bordered table-striped" id="DataTable">
+            <thead>
+                <tr style="background-color: #03274d; color: white; font-size: 12px; font-family: 'Times New Roman', Times, serif; text-align: center">
+                    
+                    <th>EMP NAME</th>
+                    <th>EMP DESIGNATION</th>
+                    <th>EMP ADDRESS</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="all-element">
+                        <td>@item.EmpName</td>
+                        <td>@item.EmpDesignation</td>
+                        <td>@item.EmpAddress</td>
+                        <td>
+                            <div style="display:flex">
+                                <div class="divcook1 btn btn-success col-lg-2" data-toggle="tooltip" title="Edit Employee Details" style="width:70px; height:39px; font-size:13px;" onclick="">
+                                    @Html.ActionLink("Edit", "EditEmp", "Home", new { EmpID = item.EmpID, }, new { @class = "editbtnn", style = "text-decoration:none; color:white;" })
+                                </div>
+                                @*<div class="divcook1 btn btn-danger col-lg-2" data-toggle="tooltip" title="Remove Employee" style="width:70px; height:39px; font-size:13px; margin-left:15px;margin-right:-80px" onclick="">
+                                        @Html.ActionLink("Delete", "DeleteEmp", "Home", new { EmpID = item.EmpID, }, new { @class = "editbtnn", style = "text-decoration:none; color:white;" })
+                                    </div>*@
+                                <input style="background-color:red; border:none;" type="button" class="removeBtn" onclick="RemoveEmp(@item.EmpID)" value="Remove" />
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<style>
+    .fixTableHead thead th {
+        background-color: #03274d;
+        color: white;
+        position: sticky;
+        top: 0;
+    }
+
+    .removeBtn {
+        margin-left: 10px;
+        margin-right: -82px;
+        font-size: 17px;
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@*<script type="text/javascript">
+    function RemoveEmp(EmpID) {
+            $.ajax({
+                url: '@Url.Action("DeleteEmp", "Home")',
+                method: 'POST',
+                data: { EmpID: EmpID },
+                success: function (result) {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                                location.href = "/Home/Index"
+                        };
+                    })
+                },
+                error: function () {
+                    alert("not");
+                }
+            });
+    }
+</script>*@
+
+<script type="text/javascript">
+    @*function RemoveEmp(EmpID) {
+            $.ajax({
+                url: '@Url.Action("DeleteEmp", "Home")',
+                method: 'POST',
+                data: { EmpID: EmpID },
+                success: function (result) {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                                location.href = "/Home/Index"
+                        };
+                    })
+                },
+                error: function () {
+                    alert("not");
+                }
+            });
+    }*@
+
+    function RemoveEmp(EmpID) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            allowOutsideClick: false,
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("DeleteEmp", "Home")',
+                    method: 'POST',
+                    data: { EmpID: EmpID },
+                    success: function (result) {
+                        location.href = "/Home/Index"
+                    }
+                });
+            };
+        })
+    }
+</script>
+
+
+
+
+
+    @*function RemoveEmp() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    //Make ajax call
+                    var id = $("#EmpID").val();
+                    var formcall = $("#UserForm");
+                    $.ajax({
+                        url: "/Home/DeleteEmp",
+                        type: 'POST',
+                        data: formcall.serialize(),
+                        success: function (result) {
+                            $("#divpartial").load('@Url.Action("Index","Home")'),
+                            Swal.fire({
+                                title: 'Deleted',
+                                text: "Your file has been deleted.",
+                                icon: 'success'
+                            })
+                        }
+                    })
+                }
+                //else {
+                //    $(".btn").css("display", "inline-block");
+                //    $("#insrtcat").hide();
+                //    $("#updatectg").hide();
+                //    $("#cnclctg").hide();
+                //}
+            });
+        }*@
+
+
+
+
+@*function RemoveEmp(EmpID) {
+            $.ajax({
+                url: '@Url.Action("DeleteEmp", "Home")',
+                method: 'POST',
+                data: { EmpID: EmpID },
+                success: function (result) {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                                location.href = "/Home/Index"
+                        };
+                    })
+                },
+                error: function () {
+                    alert("not");
+                }
+            });
+        }
+    </script>*@
+
+
+
